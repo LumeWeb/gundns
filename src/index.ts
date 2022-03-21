@@ -27,7 +27,7 @@ const processedRequests: { [id: string]: number } = {};
 
 require("gun/lib/open");
 
-const gun = new Gun({ web: server, store: Rmem() });
+const gun = new Gun({ web: server, store: Rmem(), ws: { path: "/dns" } });
 
 type DnsRequest = {
   query: string;

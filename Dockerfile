@@ -8,7 +8,7 @@ ADD *.json ./
 ADD yarn.lock ./
 
 # Install all dependencies needed for production build
-RUN yarn && yarn build
+RUN yarn && rm node_modules/@types/web -rf && yarn build
 
 # Clean
 RUN rm -rf node_modules

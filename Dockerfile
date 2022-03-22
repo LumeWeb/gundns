@@ -1,12 +1,11 @@
 FROM node:latest
 LABEL maintainer="Derick Hammer <contact@lumeweb.com>"
 
-ARG branch=master
-
-WORKDIR /
-RUN git clone --single-branch --branch ${branch} https://github.com/LumeWeb/gundns.git app
-
 WORKDIR /app
+
+ADD src src/
+ADD *.json ./
+ADD yarn.lock ./
 
 # Install all dependencies needed for production build
 RUN yarn && yarn build

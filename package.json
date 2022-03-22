@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
-        "start": "node build/index.js",
+        "start": "node --inspect-brk=0.0.0.0 build/index.js",
         "format": "prettier 'src/'",
         "prepare": "husky install",
         "lint": "tslint --project ."

@@ -7,11 +7,13 @@ import { Mutex } from "async-mutex";
 // @ts-ignore
 import { IGunCryptoKeyPair } from "gun/types/types";
 import * as path from "path";
+import { fileURLToPath } from "url";
 
 const server = http.createServer().listen(8081);
 const require = createRequire(import.meta.url);
 const Rmem = require("gun/lib/rmem");
 const jayson = require("jayson/promise");
+const __dirname = fileURLToPath(path.dirname(import.meta.url));
 
 const dnsTtl: number = isNaN(parseInt(process.env.DNS_TTL as string))
   ? 12 * 60 * 60

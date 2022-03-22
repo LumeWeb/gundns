@@ -8,6 +8,7 @@ import { Mutex } from "async-mutex";
 import { IGunCryptoKeyPair } from "gun/types/types";
 import * as path from "path";
 import { fileURLToPath } from "url";
+import { clearTimeout } from "timers";
 
 const server = http.createServer().listen(8081);
 const require = createRequire(import.meta.url);
@@ -36,6 +37,7 @@ type DnsRequest = {
   query: string;
   chain: string;
   data: object | any[] | string;
+  force?: boolean;
 };
 
 type DnsResponse = {
@@ -140,7 +142,7 @@ async function processRequest(request: DnsRequest): Promise<void> {
 
       processed = true;
 
-      if (response.put) {
+      if (response.put && !request.force) {
         let reqCount = response.put.requests + 1;
         gun
           .user()
@@ -193,6 +195,11 @@ async function processRequest(request: DnsRequest): Promise<void> {
       dnsResp.data = error ? { error } : rpcResp.result;
 
       gun.user().get("responses").get(reqId).put(dnsResp);
+
+      if (ttlTimers[reqId] && request.force) {
+        clearTimeout(ttlTimers[reqId]);
+        delete ttlTimers[reqId];
+      }
 
       if (!ttlTimers[reqId]) {
         ttlTimers[reqId] = setTimeout(expireResponse(reqId), dnsTtl * 1000);

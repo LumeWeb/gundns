@@ -6,6 +6,7 @@ import * as fs from "fs";
 import { Mutex } from "async-mutex";
 // @ts-ignore
 import { IGunCryptoKeyPair } from "gun/types/types";
+import * as path from "path";
 
 const server = http.createServer().listen(8081);
 const require = createRequire(import.meta.url);
@@ -18,7 +19,7 @@ const dnsTtl: number = isNaN(parseInt(process.env.DNS_TTL as string))
 const requestTtl: number = isNaN(parseInt(process.env.REQ_TTL as string))
   ? 5 * 60
   : parseInt(process.env.REQ_TTL as string);
-const keyPairLocation = "../auth.json";
+const keyPairLocation = path.join(path.dirname(__dirname), "data", "auth.json");
 
 const clients: { [chain: string]: any } = {};
 const pendingRequests: { [requestId: string]: Mutex } = {};

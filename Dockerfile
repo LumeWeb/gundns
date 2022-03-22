@@ -18,4 +18,4 @@ RUN yarn cache clean
 # install production dependencies only
 RUN yarn install --production
 
-CMD ["npm","start"]
+ENTRYPOINT ["npm","start"]

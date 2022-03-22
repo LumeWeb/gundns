@@ -8,7 +8,7 @@ import { Mutex } from "async-mutex";
 import { IGunCryptoKeyPair } from "gun/types/types";
 import * as path from "path";
 import { fileURLToPath } from "url";
-import { clearTimeout } from "timers";
+import { clearTimeout, setTimeout } from "timers";
 
 const server = http.createServer().listen(8081);
 const require = createRequire(import.meta.url);

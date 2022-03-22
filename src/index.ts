@@ -52,10 +52,10 @@ function getClient(chain: string): Function {
   chain = chain.replace(/[^a-z0-9\-]/g, "");
 
   if (!(chain in clients)) {
-    clients[chain] = jayson.Client.https({
-      hostname: process.env.RPC_PROXY_HOST,
-      port: process.env.RPC_PROXY_PORT,
-      path: "/rpc",
+    clients[chain] = jayson.Client.http({
+      host: process.env.RPC_PROXY_HOST,
+      port: parseInt(process.env.RPC_PROXY_PORT as string),
+      path: "/",
       headers: {
         "X-Chain": chain,
       },

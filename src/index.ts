@@ -128,7 +128,8 @@ async function processRequest(request: DnsRequest): Promise<void> {
   gun
     .user()
     .get("responses")
-    .get(reqId, async function (response) {
+    .get(reqId)
+    .once(async function (response) {
       if (lock.isLocked()) {
         return;
       }
@@ -142,16 +143,16 @@ async function processRequest(request: DnsRequest): Promise<void> {
 
       processed = true;
 
-      if (response.put && !request.force) {
-        let reqCount = response.put.requests + 1;
+      if (response && !request.force) {
+        let reqCount = response.requests + 1;
         gun
           .user()
           .get("responses")
           .get(reqId)
           .put({
             requests: reqCount,
-            updated: response.put.updated,
-            data: response.put.data,
+            updated: response.updated,
+            data: response.data,
           } as DnsResponse);
 
         await lock.release();

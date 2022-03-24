@@ -113,13 +113,14 @@ function maybeProcessItem(item: any[]): void {
     return;
   }
 
-  if (!item[1]) {
+  if (!(item[1] && undefined !== item[1].data)) {
     return;
   }
 
   processedRequests[item[0]] = Date.now();
   processRequest(item[1]);
 }
+
 async function processRequest(request: DnsRequest): Promise<void> {
   const reqId = getRequestId(request);
 

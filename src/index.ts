@@ -113,6 +113,10 @@ function maybeProcessItem(item: any[]): void {
     return;
   }
 
+  if (!item[1]) {
+    return;
+  }
+
   processedRequests[item[0]] = Date.now();
   processRequest(item[1]);
 }

@@ -31,7 +31,12 @@ const processedRequests: { [id: string]: number } = {};
 
 require("gun/lib/open");
 
-const gun = new Gun({ web: server, store: Rmem(), ws: { path: "/dns" } });
+const gun = new Gun({
+  web: server,
+  store: Rmem(),
+  ws: { path: "/dns" },
+  axe: false,
+});
 
 type DnsRequest = {
   query: string;
@@ -199,6 +204,8 @@ async function processRequest(request: DnsRequest): Promise<void> {
       }
 
       dnsResp.data = error ? { error } : rpcResp.result;
+
+      console.log(`fetched data  ${reqId}`, dnsResp);
 
       gun.user().get("responses").get(reqId).put(dnsResp);
 

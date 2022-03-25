@@ -204,9 +204,6 @@ async function processRequest(request: DnsRequest): Promise<void> {
       }
 
       dnsResp.data = error ? { error } : rpcResp.result;
-
-      console.log(`fetched data  ${reqId}`, dnsResp);
-
       gun.user().get("responses").get(reqId).put(dnsResp);
 
       if (ttlTimers[reqId] && request.force) {

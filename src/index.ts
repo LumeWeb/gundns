@@ -10,7 +10,7 @@ import * as path from "path";
 import { fileURLToPath } from "url";
 import { clearTimeout, setTimeout } from "timers";
 
-const server = http.createServer().listen(8081);
+const server = http.createServer().listen(80);
 const require = createRequire(import.meta.url);
 const Rmem = require("gun/lib/rmem");
 const jayson = require("jayson/promise");

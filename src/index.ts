@@ -189,14 +189,8 @@ async function processRequest(request: DnsRequest): Promise<void> {
       };
 
       if (rpcResp) {
-        if (null !== rpcResp.result) {
-          if (false === rpcResp.result) {
-            error = true;
-          } else {
-            if (typeof rpcResp.result !== "string") {
-              rpcResp.result = JSON.stringify(rpcResp.result);
-            }
-          }
+        if (false === rpcResp.result) {
+          error = true;
         }
         if (rpcResp.error) {
           error = rpcResp.error.message;
@@ -204,6 +198,10 @@ async function processRequest(request: DnsRequest): Promise<void> {
       }
 
       dnsResp.data = error ? { error } : rpcResp.result;
+
+      if (typeof dnsResp.data !== "string") {
+        dnsResp.data = JSON.stringify(dnsResp.data);
+      }
       gun.user().get("responses").get(reqId).put(dnsResp);
 
       if (ttlTimers[reqId] && request.force) {

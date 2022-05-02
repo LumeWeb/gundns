@@ -37,11 +37,14 @@ jobs:
             ${{ github.repository }}
             ghcr.io/${{ github.repository }}
 
+      - name: Lowercase Repository name
+        id: lowercase_repo
+        run: echo "::set-output name=REPO::$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')"
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v2.10.0
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.lowercase_repo.outputs.REPO }}:latest
           labels: ${{ steps.meta.outputs.labels }}

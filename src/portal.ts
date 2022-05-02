@@ -1,7 +1,7 @@
-import WebSocket from "ws";
 import { createRequire } from "module";
 import { JSONPortalList } from "./types.js";
 import { portalListName, portalListOwner } from "./constants.js";
+import WSReconnect from "./ws.js";
 
 const require = createRequire(import.meta.url);
 const { SkynetClient } = require("skynet-js");
@@ -11,7 +11,7 @@ const { toHexString } = require("skynet-js/dist/cjs/utils/string.js");
 /*
  TODO: Use kernel code to use many different portals and not hard code a portal
  */
-let portalConnection: WebSocket;
+let portalConnection: WSReconnect;
 const portalClient = new SkynetClient("https://fileportal.org");
 
 async function fetchPortals() {
@@ -46,15 +46,17 @@ function setPeers(peers: string[]) {
 }
 
 export function setupPortalListSubscription() {
-  portalConnection = new WebSocket(
+  portalConnection = new WSReconnect(
     "wss://fileportal.org/skynet/registry/subscription"
   );
   portalConnection.on("open", () => {
-    portalConnection.send({
-      action: "subscribe",
-      pubkey: `ed25519:${portalListOwner}`,
-      datakey: toHexString(hashDataKey(portalListName)),
-    });
+    portalConnection.send(
+      JSON.stringify({
+        action: "subscribe",
+        pubkey: `ed25519:${portalListOwner}`,
+        datakey: toHexString(hashDataKey(portalListName)),
+      })
+    );
   });
   portalConnection.on("message", fetchPortals);
 }

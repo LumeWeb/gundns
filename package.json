@@ -3,7 +3,7 @@
     "type": "module",
     "scripts": {
         "build": "tsc",
-        "start": "node build/index.js",
+        "start": "node --harmony-top-level-await build/index.js",
         "format": "prettier 'src/'",
         "prepare": "husky install",
         "lint": "tslint --project ."

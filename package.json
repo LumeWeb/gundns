@@ -11,7 +11,9 @@
     "dependencies": {
         "async-mutex": "^0.3.2",
         "gun": "^0.2020.1236",
-        "jayson": "^3.6.6"
+        "jayson": "^3.6.6",
+        "skynet-js": "^4.1.0",
+        "ws": "^8.6.0"
     },
     "devDependencies": {
         "@types/node": "^17.0.21",

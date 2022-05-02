@@ -9,6 +9,7 @@ import { IGunCryptoKeyPair } from "gun/types/types";
 import * as path from "path";
 import { fileURLToPath } from "url";
 import { clearTimeout, setTimeout } from "timers";
+import WebSocket from "ws";
 
 const server = http.createServer().listen(80);
 const require = createRequire(import.meta.url);
@@ -16,12 +17,21 @@ const Rmem = require("gun/lib/rmem");
 const jayson = require("jayson/promise");
 const __dirname = fileURLToPath(path.dirname(import.meta.url));
 
+const { SkynetClient } = require("skynet-js");
+const { hashDataKey } = require("skynet-js/dist/cjs/crypto.js");
+const { toHexString } = require("skynet-js/dist/cjs/utils/string.js");
+
 const dnsTtl: number = isNaN(parseInt(process.env.DNS_TTL as string))
   ? 12 * 60 * 60
   : parseInt(process.env.DNS_TTL as string);
 const requestTtl: number = isNaN(parseInt(process.env.REQ_TTL as string))
   ? 5 * 60
   : parseInt(process.env.REQ_TTL as string);
+const portalListName: string =
+  process.env.PORTAL_LIST_NAME ?? "community-portals";
+const portalListOwner: string =
+  process.env.PORTAL_SKYLINK_OWNER ??
+  "86c7421160eb5cb4a39495fc3e3ae25a60b330fff717e06aab978ad353722014";
 const keyPairLocation = path.join(path.dirname(__dirname), "data", "auth.json");
 
 const clients: { [chain: string]: any } = {};
@@ -31,6 +41,12 @@ const processedRequests: { [id: string]: number } = {};
 
 require("gun/lib/open");
 
+/*
+ TODO: Use kernel code to use many different portals and not hard code a portal
+ */
+let portalConnection: WebSocket;
+const portalClient = new SkynetClient("https://fileportal.org");
+
 const gun = new Gun({
   web: server,
   store: Rmem(),
@@ -38,14 +54,14 @@ const gun = new Gun({
   axe: false,
 });
 
-type DnsRequest = {
+interface DnsRequest {
   query: string;
   chain: string;
   data: object | any[] | string;
   force?: boolean;
-};
+}
 
-type DnsResponse = {
+interface DnsResponse {
   updated: number;
   requests: number;
   data:
@@ -53,7 +69,24 @@ type DnsResponse = {
     | {
         error: string | boolean;
       };
-};
+}
+
+export interface JSONPortalItem {
+  pubkey?: string;
+  supports: string[];
+}
+
+export interface JSONPortalList {
+  [domain: string]: JSONPortalItem;
+}
+
+export interface Portal extends JSONPortalItem {
+  host: string;
+}
+
+export interface PortalList {
+  [domain: string]: Portal;
+}
 
 function getClient(chain: string): Function {
   chain = chain.replace(/[^a-z0-9\-]/g, "");
@@ -236,9 +269,56 @@ function pruneRequests() {
   }
 }
 
+async function fetchPortals() {
+  let portals: PortalList = (
+    await portalClient.dbV2.getJSON(portalListOwner, portalListName)
+  ).data as PortalList;
+
+  setPeers(getPeersFromPortalList(portals));
+}
+
+function getPeersFromPortalList(portals: PortalList) {
+  const list = [];
+
+  for (const host of Object.keys(portals)) {
+    const portal = portals[host];
+    if (portal.supports.includes("dns")) {
+      list.push(`https://${host}`);
+    }
+  }
+
+  return list;
+}
+
+function setPeers(peers: string[]) {
+  // @ts-ignore
+  const mesh = gun.back("opt.mesh");
+  // @ts-ignore
+  const currentPeers = gun.back("opt.peers");
+
+  Object.keys(currentPeers).forEach((id) => mesh.bye(id));
+  peers.forEach((item) => mesh.hi({ url: item }));
+}
+
+function setupPortalListSubscription() {
+  portalConnection = new WebSocket(
+    "https://fileportal.org/skynet/registry/subscription"
+  );
+  portalConnection.on("open", () => {
+    portalConnection.send({
+      action: "subscribe",
+      pubkey: `ed25519:${portalListOwner}`,
+      datakey: toHexString(hashDataKey(portalListName)),
+    });
+  });
+  portalConnection.on("message", fetchPortals);
+}
+
 async function bootup() {
   await auth();
   health();
+  setupPortalListSubscription();
+
   // @ts-ignore
   gun.get("requests").open(function (items) {
     Object.entries(items).forEach(maybeProcessItem);

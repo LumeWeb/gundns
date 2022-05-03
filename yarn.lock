@@ -190,13 +190,6 @@ asynckit@^0.4.0:
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
   integrity sha1-x57Zf380y48robyXkLzDZkdLS3k=
 
-axios@^0.26.0:
-  version "0.26.1"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.26.1.tgz#1ede41c51fcf51bbbd6fd43669caaa4f0495aaa9"
-  integrity sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==
-  dependencies:
-    follow-redirects "^1.14.8"
-
 axios@^0.27.2:
   version "0.27.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
@@ -432,7 +425,7 @@ find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-follow-redirects@^1.14.8, follow-redirects@^1.14.9:
+follow-redirects@^1.14.9:
   version "1.14.9"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.9.tgz#dd4ea157de7bfaf9ea9b3fbd85aa16951f78d8d7"
   integrity sha512-MQDfihBQYMcyy5dhRDJUHcw7lb2Pv/TuE6xP1vyraLukNDHKbDxDNaOE3NbCAdKQApno+GPRyo1YAp89yCjK4w==
@@ -918,32 +911,9 @@ sjcl@^1.0.8:
   resolved "https://registry.yarnpkg.com/sjcl/-/sjcl-1.0.8.tgz#f2ec8d7dc1f0f21b069b8914a41a8f236b0e252a"
   integrity sha512-LzIjEQ0S0DpIgnxMEayM1rq9aGwGRG4OnZhCdjx7glTaJtf4zRfpg87ImfjSJjoW9vKpagd82McDOwbRT5kQKQ==
 
-skynet-js@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/skynet-js/-/skynet-js-4.1.0.tgz#eccb84d04e9f42aa4f86ecb24fb4d59ed21e44cc"
-  integrity sha512-VmUjJ9QnLpfuQA2j7vzFh8JvukjQlX4QLGw1HY3VyslFPj92vPpyO8gqjPfzgbkR05TXL7CbdqZoLZr/RBDZPw==
-  dependencies:
-    "@skynetlabs/tus-js-client" "^2.3.0"
-    async-mutex "^0.3.2"
-    axios "^0.26.0"
-    base32-decode "^1.0.0"
-    base32-encode "^1.1.1"
-    base64-js "^1.3.1"
-    blakejs "^1.1.0"
-    buffer "^6.0.1"
-    mime "^3.0.0"
-    path-browserify "^1.0.1"
-    post-me "^0.4.5"
-    randombytes "^2.1.0"
-    sjcl "^1.0.8"
-    skynet-mysky-utils "^0.3.0"
-    tweetnacl "^1.0.3"
-    url-join "^4.0.1"
-    url-parse "^1.5.1"
-
 "skynet-js@https://github.com/LumeWeb/gundb-skynet-js":
   version "4.1.0"
-  resolved "https://github.com/LumeWeb/gundb-skynet-js#06ef7787c5edc1277266357f7c4bbc7fb43f1b27"
+  resolved "https://github.com/LumeWeb/gundb-skynet-js#95ae8568ca9993dadd410d1f8f83241b6cc4f6e8"
   dependencies:
     "@skynetlabs/tus-js-client" "^2.3.0"
     async-mutex "^0.3.2"

@@ -8,13 +8,13 @@ ADD *.json ./
 ADD yarn.lock ./
 
 # Install all dependencies needed for production build
-RUN yarn && rm node_modules/@types/web -rf && yarn build
+RUN yarn --network-concurrency 1 && rm node_modules/@types/web -rf && yarn build
 
 # Clean
 RUN rm -rf node_modules
 RUN yarn cache clean
 
 # install production dependencies only
-RUN yarn install --production
+RUN yarn --network-concurrency 1 install --production
 
 CMD ["npm","start"]

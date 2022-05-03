@@ -12,7 +12,7 @@
         "async-mutex": "^0.3.2",
         "gun": "^0.2020.1236",
         "jayson": "^3.6.6",
-        "skynet-js": "^4.1.0",
+        "skynet-js": "https://github.com/LumeWeb/gundb-skynet-js",
         "ws": "^8.6.0"
     },
     "devDependencies": {

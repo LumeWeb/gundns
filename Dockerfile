@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:16
 LABEL maintainer="Derick Hammer <contact@lumeweb.com>"
 
 WORKDIR /app

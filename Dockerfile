@@ -3,8 +3,6 @@ LABEL maintainer="Derick Hammer <contact@lumeweb.com>"
 
 WORKDIR /app
 
-RUN apk add git
-
 ADD src src/
 ADD *.json ./
 ADD yarn.lock ./
